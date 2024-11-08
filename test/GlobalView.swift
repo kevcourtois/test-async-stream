@@ -19,14 +19,13 @@ struct GlobalView: View {
             model.updateValue(value + 1)
         }, label: {
             Text("Val: \(value)")
-        }).onAppear {
-            Task {
-                guard let stateStream = await model.actor.stateStream else {
-                    return
-                }
-                for await state in stateStream {
-                    value = state
-                }
+        })
+        .task {
+            guard let stateStream = await model.actor.stateStream else {
+                return
+            }
+            for await state in stateStream {
+                value = state
             }
         }
     }
